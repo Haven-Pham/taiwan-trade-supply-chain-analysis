@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Taiwan Trade: A Supply Chain Dashboard</title>
+<meta name="description" content="Interactive analysis of Taiwan's official trade and container data: product and market concentration, volume versus price, port throughput and export exposure.">
+<meta name="theme-color" content="#F6F8FB">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<a class="skip" href="#main" data-i18n="skip"></a>
+<header class="top">
+  <div class="wrap top-row">
+    <div>
+      <p class="eyebrow" data-i18n="eyebrow"></p>
+      <h1 data-i18n="title"></h1>
+      <p class="lede" id="lede"></p>
+    </div>
+    <div class="controls">
+      <div class="seg" role="group" aria-label="Language">
+        <button type="button" data-lang="en">English</button>
+        <button type="button" data-lang="zh">繁體中文</button>
+      </div>
+      <button type="button" class="ghost" id="theme" aria-pressed="false"></button>
+    </div>
+  </div>
+</header>
+
+<main id="main" class="wrap">
+  <section aria-labelledby="kpi-h">
+    <h2 id="kpi-h" class="sr-only" data-i18n="kpiTitle"></h2>
+    <div class="kpis" id="kpis"></div>
+    <p class="note" id="period-note"></p>
+  </section>
+
+  <section class="block" aria-labelledby="s1">
+    <h2 id="s1" data-i18n="s1"></h2>
+    <p class="takeaway" id="t1"></p>
+    <div class="grid two">
+      <figure class="card">
+        <figcaption data-i18n="c1"></figcaption>
+        <div class="chart" id="chart-growth" role="img"></div>
+      </figure>
+      <figure class="card">
+        <figcaption data-i18n="c2"></figcaption>
+        <div class="chart" id="chart-goods" role="img"></div>
+      </figure>
+    </div>
+  </section>
+
+  <section class="block" aria-labelledby="s2">
+    <h2 id="s2" data-i18n="s2"></h2>
+    <p class="takeaway" id="t2"></p>
+    <div class="filters">
+      <div class="seg small" role="group" data-group="flow"></div>
+      <label class="pick"><span data-i18n="yearLabel"></span><select id="country-year"></select></label>
+    </div>
+    <div class="grid two">
+      <figure class="card">
+        <figcaption data-i18n="c3"></figcaption>
+        <div class="chart" id="chart-markets" role="img"></div>
+      </figure>
+      <figure class="card">
+        <figcaption data-i18n="c4"></figcaption>
+        <div class="chart" id="chart-countries" role="img"></div>
+        <p class="note" id="country-note"></p>
+      </figure>
+    </div>
+  </section>
+
+  <section class="block" aria-labelledby="s3">
+    <h2 id="s3" data-i18n="s3"></h2>
+    <p class="takeaway" id="t3"></p>
+    <div class="grid two">
+      <figure class="card">
+        <figcaption data-i18n="c5"></figcaption>
+        <div class="chart tall" id="chart-index" role="img"></div>
+      </figure>
+      <figure class="card">
+        <figcaption data-i18n="c6"></figcaption>
+        <div class="chart tall" id="chart-quantity" role="img"></div>
+      </figure>
+    </div>
+  </section>
+
+  <section class="block" aria-labelledby="s4">
+    <h2 id="s4" data-i18n="s4"></h2>
+    <p class="takeaway" id="t4"></p>
+    <div class="grid two">
+      <figure class="card">
+        <figcaption data-i18n="c7"></figcaption>
+        <div class="chart" id="chart-teu" role="img"></div>
+      </figure>
+      <figure class="card">
+        <figcaption data-i18n="c8"></figcaption>
+        <div class="chart" id="chart-ports" role="img"></div>
+      </figure>
+    </div>
+    <p class="note" data-i18n="airNote"></p>
+  </section>
+
+  <section class="block" aria-labelledby="s5">
+    <h2 id="s5" data-i18n="s5"></h2>
+    <p class="takeaway" data-i18n="t5"></p>
+    <div class="card scenario">
+      <div class="scenario-controls">
+        <label><span data-i18n="laneLabel"></span><select id="lane"></select></label>
+        <label><span id="shock-label"></span><input type="range" id="shock" min="5" max="50" step="5" value="20"></label>
+      </div>
+      <div class="scenario-out" aria-live="polite">
+        <div><strong id="out-usd"></strong><span data-i18n="outUsd"></span></div>
+        <div><strong id="out-pct"></strong><span data-i18n="outPct"></span></div>
+        <div><strong id="out-share"></strong><span data-i18n="outShare"></span></div>
+      </div>
+      <div class="chart short" id="chart-lanes" role="img"></div>
+      <p class="note" data-i18n="scenarioNote"></p>
+    </div>
+  </section>
+
+  <section class="block" aria-labelledby="s6">
+    <h2 id="s6" data-i18n="s6"></h2>
+    <ul class="list">
+      <li data-i18n="m1"></li>
+      <li data-i18n="m2"></li>
+      <li data-i18n="m3"></li>
+      <li id="m4"></li>
+      <li data-i18n="m5"></li>
+    </ul>
+    <p class="note" id="sources"></p>
+  </section>
+</main>
+
+<footer class="wrap foot">
+  <p><span data-i18n="by"></span> ·
+    <a href="https://github.com/Haven-Pham/taiwan-trade-supply-chain-analysis" data-i18n="code"></a> ·
+    <a href="https://haven-portfolio02.vercel.app" data-i18n="portfolio"></a> ·
+    <a href="https://www.linkedin.com/in/havenpham">LinkedIn</a></p>
+</footer>
+
+<script src="vendor/plotly-basic.min.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

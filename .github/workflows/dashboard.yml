@@ -1,0 +1,66 @@
+name: Dashboard
+
+# Publishes dashboard/ to GitHub Pages. Scheduled runs first try to refresh the data.
+# If a source is down or its format changed, the last good data.json stays online.
+on:
+  push:
+    branches: [main]
+    paths: ["dashboard/**", ".github/workflows/dashboard.yml"]
+  schedule:
+    - cron: "0 6 12 * *"
+    - cron: "0 6 27 * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+concurrency:
+  group: dashboard
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        if: github.event_name != 'push'
+        with:
+          python-version: "3.12"
+          cache: pip
+      - name: Refresh data
+        if: github.event_name != 'push'
+        continue-on-error: true
+        run: |
+          pip install -r requirements.txt
+          cp -r data/raw data/latest
+          python scripts/download_data.py data/latest || echo "::warning::Some sources failed; their last good copy was used."
+          TAIWAN_TRADE_RAW_DIR=data/latest python scripts/build_dashboard.py
+      - name: Commit refreshed data
+        if: github.event_name != 'push'
+        run: |
+          git add dashboard/data.json
+          if git diff --cached --quiet; then
+            echo "No new data."
+          else
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git commit -m "Refresh dashboard data"
+            git push
+          fi
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: dashboard
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
